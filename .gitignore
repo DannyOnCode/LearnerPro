@@ -9,7 +9,15 @@ lerna-debug.log*
 
 node_modules
 dist
-dist-ssr
+dist-react
+dist-electron
+backend/build/
+backend/dist/
+backend/*.spec
+venv/
+backend/__pycache__/
+*.pyc
+*.pyo
 *.local
 
 # Editor directories and files
