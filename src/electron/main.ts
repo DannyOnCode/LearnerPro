@@ -1,10 +1,11 @@
-import { app, BrowserWindow, session, ipcMain} from 'electron';
+import { app, BrowserWindow, session, ipcMain, protocol, net } from 'electron';
 import path from 'path';
 import { spawn, ChildProcess } from 'child_process';
 import { isDev } from "./util.js";
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import axios from 'axios';
-import { getPreloadPath } from "./pathResolver.js";
+import { getPreloadPath, getVideoPath } from "./pathResolver.js";
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const CURRENT_DIR = path.dirname(__filename);
@@ -15,12 +16,39 @@ const pythonPath = isProd ? path.join(process.resourcesPath, 'backend', 'main.ex
 
 let pythonProcess: ChildProcess | null = null;
 
+// Register the custom 'media' protocol
+protocol.registerSchemesAsPrivileged([
+    {
+        scheme: 'media',
+        privileges: {
+            secure: true,
+            supportFetchAPI: true,
+            bypassCSP: true,
+            stream: true
+        }
+    }
+]);
+
 app.on("ready", () => {
     pythonProcess = isProd ? spawn(pythonPath)
         : spawn('python', [pythonPath]);
 
     pythonProcess.on('error', (err) => {
         console.error('Failed to start Python process:', err);
+    });
+
+    protocol.handle('media', (request) => {
+        let filePath = request.url.replace('media:///', '');
+
+        if (filePath.startsWith('media://')) {
+            filePath = filePath.replace('media://', '');
+        }
+
+        filePath = decodeURIComponent(filePath);
+
+        const fileUrl = pathToFileURL(filePath).toString();
+
+        return net.fetch(fileUrl);
     });
 
     const mainWindow = new BrowserWindow({
@@ -87,4 +115,34 @@ ipcMain.handle('perform-login-and-download', async (event, videoUrl, lecture_nam
             }
         });
     });
+});
+
+ipcMain.handle('get-videos', async () => {
+    const videoPath = getVideoPath();
+    console.log(videoPath);
+
+    // 1. Check if folder exists
+    if (!fs.existsSync(videoPath)) {
+        console.log("Video path does not exist.");
+        return [];
+    }
+
+    try {
+        // 2. Read the directory
+        const files = await fs.promises.readdir(videoPath);
+        console.log(files);
+
+        // 3. Filter for MP4s and return their names
+        const videoFiles = files.filter(file => file.endsWith('.mp4'));
+        console.log(videoFiles)
+
+        // 4. Return simple objects
+        return videoFiles.map(file => ({
+            name: file,
+            path: path.join(videoPath, file)
+        }));
+    } catch (error) {
+        console.error("Error reading videos:", error);
+        return [];
+    }
 });

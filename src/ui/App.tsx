@@ -1,6 +1,7 @@
 import {Routes, Route, NavLink} from "react-router-dom";
 import Home from "./Home.tsx";
 import Session from "./Session.tsx";
+import Workspace from "./Workspace.tsx";
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
         <Routes>
             <Route path="/" element = {<Home/>} />
             <Route path="/session" element={<Session/>} />
+            <Route path="/workspace" element={<Workspace/>}></Route>
         </Routes>
     </>
   )

@@ -9,3 +9,11 @@ export function getPreloadPath() {
         '/dist-electron/preload.cjs'
     );
 }
+
+export function getVideoPath() {
+    return path.join(
+        app.getAppPath(),
+        isDev() ? '.' : '..',
+        '/backend/Videos'
+    );
+}

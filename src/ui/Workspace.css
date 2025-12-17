@@ -1,0 +1,111 @@
+/* Workspace.css */
+.workspace-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: #f0f2f5; /* Slightly darker background for contrast */
+    overflow: hidden;
+}
+
+/* LEFT: Video Section */
+.video-panel {
+    flex: 1; /* Takes remaining space */
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    background: #000;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.main-video {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    display: block;
+}
+
+.back-button {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Google Sans', sans-serif;
+    font-weight: 500;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* RIGHT: Notes Section */
+.notes-panel {
+    width: 450px; /* Fixed width sidebar */
+    background: white;
+    border-left: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.05);
+}
+
+.notes-header {
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.notes-title {
+    margin: 0;
+    font-size: 18px;
+    color: #202124;
+    font-family: 'Google Sans', sans-serif;
+}
+
+/* Editor Customization */
+.quill {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.ql-toolbar {
+    border: none !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    background: #fafafa;
+}
+
+.ql-container {
+    border: none !important;
+    flex: 1;
+    overflow-y: auto;
+    font-family: 'Google Sans', sans-serif;
+    font-size: 15px;
+}
+
+.ql-editor {
+    padding: 24px !important;
+    min-height: 100%;
+}
+
+/* Scrollbar styling for the editor */
+.ql-container::-webkit-scrollbar {
+    width: 8px;
+}
+.ql-container::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 4px;
+}
