@@ -4,7 +4,7 @@ import { spawn, ChildProcess } from 'child_process';
 import { isDev } from "./util.js";
 import { fileURLToPath } from 'url';
 import axios from 'axios';
-import { getPreloadPath } from "./pathResolver.js"; // You might need to install axios: npm install axios
+import { getPreloadPath } from "./pathResolver.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const CURRENT_DIR = path.dirname(__filename);
@@ -43,7 +43,7 @@ app.on("before-quit", () => {
 })
 
 // 1. Listen for a "Login" event from your Frontend UI
-ipcMain.handle('perform-login-and-download', async (event, videoUrl) => {
+ipcMain.handle('perform-login-and-download', async (event, videoUrl, lecture_name) => {
     // Create a temporary window for the user to log in
     const loginWindow = new BrowserWindow({
         width: 800,
@@ -75,7 +75,8 @@ ipcMain.handle('perform-login-and-download', async (event, videoUrl) => {
                 const response = await axios.post('http://127.0.0.1:8000/download', {
                     video_url: videoUrl,
                     cookies: cookies,
-                    user_agent: userAgent
+                    user_agent: userAgent,
+                    output_path: lecture_name,
                 });
 
                 resolve({ success: true, data: response.data });
