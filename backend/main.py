@@ -1,8 +1,8 @@
-# backend/main.py
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import yt_dlp
 from typing import List, Dict, Any
+import os
 
 app = FastAPI()
 
@@ -10,16 +10,29 @@ app = FastAPI()
 class DownloadRequest(BaseModel):
     video_url: str
     cookies: List[Dict[str, Any]]
-    user_agent: str  # <--- NEW FIELD
+    user_agent: str
+    output_path: str  # This is just the filename (e.g., "Lecture 1")
 
 
-def download_video(url, cookies_list, user_agent, output_path="lecture.mp4"):
+def download_video(url, cookies_list, user_agent, file_name):
     # Convert cookies to header string
     cookie_header_val = "; ".join([f"{c['name']}={c['value']}" for c in cookies_list])
 
+    # 2. Define the target folder
+    target_folder = "Videos"
+
+    # 3. Create the folder if it doesn't exist (Safety check)
+    if not os.path.exists(target_folder):
+        os.makedirs(target_folder)
+
+    # 4. Construct the full path: Videos/Lecture 1.mp4
+    # We use .%(ext)s to let yt-dlp pick the correct extension first,
+    # though merge_output_format will try to make it mp4.
+    save_path = os.path.join(target_folder, f"{file_name}.%(ext)s")
+
     ydl_opts = {
         'quiet': False,
-        'outtmpl': output_path,
+        'outtmpl': save_path,  # <--- Updated to use the folder path
         'format': 'bestvideo+bestaudio/best',
         'merge_output_format': 'mp4',
         'http_headers': {
@@ -28,7 +41,7 @@ def download_video(url, cookies_list, user_agent, output_path="lecture.mp4"):
         }
     }
 
-    print(f"DEBUG: Using User-Agent: {user_agent}")  # Optional: Check logs to verify
+    print(f"DEBUG: Saving to folder '{target_folder}' with name '{file_name}'")
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -41,8 +54,12 @@ def download_video(url, cookies_list, user_agent, output_path="lecture.mp4"):
 
 @app.post("/download")
 def start_download(request: DownloadRequest):
-    # Pass the user_agent to the download function
-    success = download_video(request.video_url, request.cookies, request.user_agent)
+    success = download_video(
+        request.video_url,
+        request.cookies,
+        request.user_agent,
+        request.output_path
+    )
 
     if success:
         return {"status": "success"}
