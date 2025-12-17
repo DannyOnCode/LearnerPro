@@ -7,7 +7,8 @@ declare global {
             // Updated to accept lectureName
             performLoginAndDownload: (url: string, lectureName: string) => void;
         };
-        require?: (module: string) => never;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        require?: (module: string) => any;
     }
 }
 
