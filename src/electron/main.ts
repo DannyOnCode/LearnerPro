@@ -1,4 +1,5 @@
 import { app, BrowserWindow, session, ipcMain, protocol, net } from 'electron';
+import { initDB, saveNote, getNote } from './databaseManager.js';
 import path from 'path';
 import { spawn, ChildProcess } from 'child_process';
 import { isDev } from "./util.js";
@@ -29,7 +30,9 @@ protocol.registerSchemesAsPrivileged([
     }
 ]);
 
-app.on("ready", () => {
+app.on("ready", async () => {
+    await initDB();
+
     pythonProcess = isProd ? spawn(pythonPath)
         : spawn('python', [pythonPath]);
 
@@ -49,6 +52,15 @@ app.on("ready", () => {
         const fileUrl = pathToFileURL(filePath).toString();
 
         return net.fetch(fileUrl);
+    });
+
+    ipcMain.handle('get-note', async (event, videoPath) => {
+        return await getNote(videoPath);
+    });
+
+    ipcMain.handle('save-note', async (event, videoPath, content) => {
+        await saveNote(videoPath, content);
+        return { success: true };
     });
 
     const mainWindow = new BrowserWindow({

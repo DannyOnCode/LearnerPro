@@ -12,6 +12,8 @@ declare global {
         electron?: {
             performLoginAndDownload: (url: string, lectureName: string) => void;
             getVideos: () => Promise<VideoFile[]>;
+            getNote: (videoPath: string) => Promise<string>;
+            saveNote: (videoPath: string, content: string) => Promise<void>;
         };
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         require?: (module: string) => any;

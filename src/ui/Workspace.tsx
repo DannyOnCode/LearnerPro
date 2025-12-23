@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import './Workspace.css';
 
-// Editor configuration for the toolbar
 const modules = {
     toolbar: [
         [{ 'header': [1, 2, false] }], // Headers
@@ -29,8 +28,31 @@ export default function Workspace() {
     const location = useLocation();
     const navigate = useNavigate();
     const [noteContent, setNoteContent] = useState('');
+    const [savingStatus, setSavingStatus] = useState('Saved');
 
     const videoData = location.state as { name: string; path: string } | null;
+
+    useEffect(() => {
+        const loadNote = async () => {
+            if (videoData && window.electron) {
+                const savedContent = await window.electron.getNote(videoData.path);
+                setNoteContent(savedContent);
+            }
+        };
+        loadNote();
+    }, [videoData]);
+
+    useEffect(() => {
+        const timeoutId = setTimeout(async () => {
+            if (videoData && window.electron) {
+                setSavingStatus('Saving...');
+                await window.electron.saveNote(videoData.path, noteContent);
+                setSavingStatus('Saved');
+            }
+        }, 1000); // Waits for 1 second of inactivity before saving
+
+        return () => clearTimeout(timeoutId);
+    }, [noteContent, videoData]);
 
     if (!videoData) {
         return <div className="error-screen">No video selected. <button onClick={() => navigate('/')}>Go Back</button></div>;
@@ -39,11 +61,13 @@ export default function Workspace() {
     const cleanPath = videoData.path.replace(/\\/g, '/');
     const videoSrc = `media:///${cleanPath}`;
 
+    const displayVideoName = videoData.name.replace('.mp4', '')
+
     return (
         <div className="workspace-container">
             {/* Left Panel: Video Player */}
             <div className="video-panel">
-                <button className="back-button" onClick={() => navigate('/session')}>
+                <button className="back-button" onClick={() => navigate('/')}>
                     ← Back to Library
                 </button>
 
@@ -57,13 +81,14 @@ export default function Workspace() {
                         Your browser does not support the video tag.
                     </video>
                 </div>
-                <h2 style={{marginTop: '20px', fontFamily: 'Google Sans'}}>{videoData.name}</h2>
+                <h2 style={{marginTop: '20px', fontFamily: 'Google Sans'}}>{displayVideoName}</h2>
             </div>
 
             {/* Right Panel: Note Taking */}
             <div className="notes-panel">
                 <div className="notes-header">
                     <h3 className="notes-title">Lecture Notes</h3>
+                    <span style={{fontSize: '12px', color: '#888'}}>{savingStatus}</span>
                 </div>
 
                 <ReactQuill
