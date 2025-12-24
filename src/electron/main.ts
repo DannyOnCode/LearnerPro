@@ -5,7 +5,7 @@ import { spawn, ChildProcess } from 'child_process';
 import { isDev } from "./util.js";
 import { fileURLToPath, pathToFileURL } from 'url';
 import axios from 'axios';
-import { getPreloadPath, getVideoPath } from "./pathResolver.js";
+import {getAssetsPath, getPreloadPath, getVideoPath} from "./pathResolver.js";
 import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -64,6 +64,7 @@ app.on("ready", async () => {
     });
 
     const mainWindow = new BrowserWindow({
+        icon: path.join(getAssetsPath(), 'LearnerProIcon.png'),
         webPreferences: {
             preload: getPreloadPath(),
         }

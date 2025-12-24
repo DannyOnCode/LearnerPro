@@ -17,3 +17,11 @@ export function getVideoPath() {
         '/backend/Videos'
     );
 }
+
+export function getAssetsPath() {
+    return path.join(
+        app.getAppPath(),
+        isDev() ? '.' : '..',
+        '/src/ui/assets'
+    );
+}

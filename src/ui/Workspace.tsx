@@ -19,7 +19,7 @@ const modules = {
 const formats = [
     'header',
     'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet', 'indent',
+    'list', 'indent',
     'size',
     'image'
 ];
@@ -61,7 +61,7 @@ export default function Workspace() {
     const cleanPath = videoData.path.replace(/\\/g, '/');
     const videoSrc = `media:///${cleanPath}`;
 
-    const displayVideoName = videoData.name.replace('.mp4', '')
+    // const displayVideoName = videoData.name.replace('.mp4', '')
 
     return (
         <div className="workspace-container">
@@ -81,7 +81,6 @@ export default function Workspace() {
                         Your browser does not support the video tag.
                     </video>
                 </div>
-                <h2 style={{marginTop: '20px', fontFamily: 'Google Sans'}}>{displayVideoName}</h2>
             </div>
 
             {/* Right Panel: Note Taking */}
@@ -97,7 +96,7 @@ export default function Workspace() {
                     onChange={setNoteContent}
                     modules={modules}
                     formats={formats}
-                    placeholder="Start typing your notes here... (You can paste images directly)"
+                    placeholder="Write your notes here... (You can paste images directly)"
                 />
             </div>
         </div>

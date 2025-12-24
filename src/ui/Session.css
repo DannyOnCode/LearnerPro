@@ -2,6 +2,8 @@
 
 /* Page Layout */
 .page-background {
+    display: flex;
+    flex-direction: column;
     background-color: #ffffff;
     min-height: 100vh;
     min-width: 100vw;
@@ -17,8 +19,23 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 40px;
+    gap: 24px; /* Adds space between elements */
 }
 
+.logo-section {
+    display: flex;
+    align-items: center;
+    /* Pushes everything else to the right if you want the logo isolated */
+    margin-right: auto;
+}
+
+.app-logo {
+    height: 80px; /* Adjust this to fit your header height */
+    width: auto;  /* Maintains aspect ratio */
+    object-fit: contain;
+}
+
+/* Update filter-group to not need margin-right auto anymore if logo handles it */
 .filter-group {
     display: flex;
     gap: 12px;
@@ -57,7 +74,7 @@
 
 .section-title {
     font-size: 24px;
-    font-weight: 400;
+    font-weight: 600;
     margin-bottom: 24px;
     color: #202124;
 }
@@ -74,7 +91,7 @@
     background-color: #f8f9fa;
     border-radius: 24px;
     border: 1px solid #e0e0e0;
-    height: 240px;
+    height: 200px;
     display: flex;
     cursor: pointer;
     transition: box-shadow 0.2s, transform 0.1s;
@@ -286,4 +303,19 @@
     border-radius: 24px;
     cursor: pointer;
     font-weight: 500;
+}
+
+.page-footer {
+    width: 100%;
+    padding: 2rem 0;
+    text-align: center;
+    margin-top: auto;
+
+    background-color: #ffffff;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.page-footer p {
+    margin: 0;
 }

@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Session.css';
+import banner from './assets/LearnerProBanner.png';
+import {QUOTES} from "./Miscellaneous.tsx";
 
 interface VideoFile {
     name: string;
@@ -90,6 +92,9 @@ export default function Session() {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [videos, setVideos] = useState<VideoFile[]>([]);
     const navigate = useNavigate();
+    const [randomQuote] = useState<string>(
+        () => QUOTES[Math.floor(Math.random() * QUOTES.length)]
+    );
 
     const loadVideos = useCallback(async () => {
         if (window.electron && window.electron.getVideos) {
@@ -144,6 +149,10 @@ export default function Session() {
         <div className="page-background">
             {/* Top Bar */}
             <div className="top-bar">
+                <div className="logo-section">
+                    <img src={banner} alt="LearnerPro" className="app-logo" />
+                </div>
+
                 <div className="filter-group">
                     {/* Using the 'active' class for the selected state */}
                     <button className="filter-chip active">All</button>
@@ -187,7 +196,6 @@ export default function Session() {
                                 {/* Remove extension for display title */}
                                 <h3 className="card-title">{video.name.replace(/\.[^/.]+$/, "")}</h3>
                                 <div className="tag">Video</div>
-                                <div className="tag">Test</div>
                             </div>
 
                             {/* Progress Bar Placeholder */}
@@ -222,6 +230,11 @@ export default function Session() {
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleUrlSubmit}
             />
+
+            <div className="page-footer">
+                <p>{randomQuote}</p>
+                <p>Start learning actively!</p>
+            </div>
         </div>
     );
 }
