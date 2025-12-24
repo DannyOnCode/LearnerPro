@@ -1,116 +1,261 @@
 /* Workspace.css */
-.workspace-container {
+
+/* Global Reset for this view */
+.workspace-layout {
     display: flex;
     height: 100vh;
     width: 100vw;
-    background-color: #f0f2f5; /* Slightly darker background for contrast */
-    overflow: hidden;
-}
-
-/* LEFT: Video Section */
-.video-panel {
-    flex: 1; /* Takes remaining space */
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.video-wrapper {
-    width: 100%;
-    max-width: 1200px;
-    background: #000;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-}
-
-.main-video {
-    width: 100%;
-    height: auto;
-    max-height: 80vh;
-    display: block;
-}
-
-.back-button {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-    padding: 8px 16px;
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 20px;
-    cursor: pointer;
+    background-color: #edeffa;
     font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-weight: 500;
-    color: #444;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    color: #edeffa;
+    overflow: hidden;
 }
 
-/* RIGHT: Notes Section */
-.notes-panel {
-    width: 450px; /* Fixed width sidebar */
-    background: white;
-    border-left: 1px solid #e0e0e0;
+/* --- 1. Navigation Rail (Left) --- */
+.nav-rail {
+    width: 72px;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    box-shadow: -2px 0 10px rgba(0,0,0,0.05);
+    align-items: center;
+    padding-top: 16px;
+    gap: 24px;
+    background-color: transparent; /* Rail sits directly on background */
+    flex-shrink: 0;
 }
 
-.notes-header {
-    padding: 20px;
+.nav-item {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #444746;
+}
+
+.nav-item:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+/* --- 2. Main Stage (Video) --- */
+.main-stage {
+    flex: 1;
+    padding: 16px 8px 16px 8px; /* Gaps between cards */
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Prevents flex items from overflowing */
+}
+
+/* --- 3. Side Stage (Notes) --- */
+.side-stage {
+    width: 450px;
+    padding: 16px 16px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+/* --- Card Common Styles --- */
+.card-container {
+    background: #ffffff;
+    border-radius: 16px; /* The round corners */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Very subtle shadow */
+}
+
+/* === Video Card Specifics === */
+.video-card .card-header {
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid transparent;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.video-content-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa; /* Slightly darker inner bg for video area */
+    position: relative;
+    overflow: hidden;
+}
+
+.video-responsive-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+.styled-video {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+}
+
+.card-footer-input {
+    padding: 16px 24px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.chat-input {
+    width: 100%;
+    padding: 16px 50px 16px 24px;
+    border-radius: 100px;
+    border: 1px solid #e0e0e0;
+    background-color: #f0f4f9;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.chat-input:focus {
+    border-color: #0b57d0;
+    background-color: #fff;
+}
+
+.send-arrow {
+    position: absolute;
+    right: 40px;
+    width: 32px;
+    height: 32px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+/* === Notes Card Specifics === */
+.notes-card {
+    border: none;
+}
+
+.notes-header-row {
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-bottom: 1px solid #f0f0f0;
 }
 
-.notes-title {
-    margin: 0;
-    font-size: 18px;
-    color: #202124;
-    font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+.breadcrumbs {
+    font-size: 12px;
+    color: #444746;
+    font-weight: 500;
 }
 
-/* Editor Customization */
-.quill {
+.note-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-indicator {
+    font-size: 11px;
+    color: #888;
+    margin-right: 8px;
+}
+
+.icon-btn {
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.editor-wrapper {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
-.ql-toolbar {
-    border: none !important;
-    border-bottom: 1px solid #f0f0f0 !important;
-    background: #fafafa;
+.notes-footer-row {
+    padding: 16px 24px;
+    border-top: 1px solid #f0f0f0;
 }
 
-.ql-container {
+.convert-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 100px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    color: #444;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.convert-btn:hover {
+    background: #f8f9fa;
+}
+
+/* === Quill Overrides for Minimalist Look === */
+.ql-toolbar.ql-snow {
     border: none !important;
-    flex: 1;
-    overflow-y: auto;
-    font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-size: 15px;
+    border-bottom: 1px solid #f0f0f0 !important;
+    padding: 12px 16px !important;
+}
+
+.ql-container.ql-snow {
+    border: none !important;
 }
 
 .ql-editor {
-    padding: 24px !important;
-    min-height: 100%;
+    padding: 20px 24px !important;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #1f1f1f;
 }
 
-/* Scrollbar styling for the editor */
-.ql-container::-webkit-scrollbar {
-    width: 8px;
-}
-.ql-container::-webkit-scrollbar-thumb {
-    background-color: #ddd;
-    border-radius: 4px;
-}
-
+/* Fix placeholder alignment based on previous fix */
 .ql-editor.ql-blank::before {
     left: 24px !important;
     right: 24px !important;
+    font-style: normal !important;
+    color: #8e918f !important;
+}
+
+/* Toolbar button adjustments */
+.ql-toolbar button {
+    opacity: 0.6;
+}
+.ql-toolbar button:hover {
+    opacity: 1;
+    color: #0b57d0 !important;
+}
+.ql-toolbar .ql-active {
+    color: #0b57d0 !important;
 }
